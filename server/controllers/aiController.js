@@ -122,7 +122,7 @@ export async function studyController(req, res) {
     // Gemini: model is unavailable or retired.
     if (/not found|not available|not enabled|disabled|unsupported model/i.test(msg)) {
       return res.status(503).json({
-        error: 'The configured Gemini model is unavailable. Set GEMINI_MODEL=gemini-2.5-flash in server/.env.',
+        error: 'The configured Gemini model is unavailable. Set GEMINI_MODEL=gemini-3.6-flash in server/.env.',
       })
     }
 

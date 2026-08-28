@@ -6,13 +6,14 @@
 import { GoogleGenAI } from '@google/genai'
 import { getExplanationPrompt, getQuizPrompt, getSummaryPrompt } from '../utils/prompts.js'
 
-const DEFAULT_MODEL = 'gemini-2.5-flash'
-const RETIRED_MODEL_ALIASES = new Set([
+const DEFAULT_MODEL = 'gemini-3.6-flash'
+const LEGACY_MODEL_ALIASES = new Set([
   'gemini-1.0-pro',
   'gemini-1.5-flash',
   'gemini-1.5-flash-latest',
   'gemini-1.5-pro',
   'gemini-1.5-pro-latest',
+  'gemini-2.5-flash',
 ])
 
 /**
@@ -21,7 +22,7 @@ const RETIRED_MODEL_ALIASES = new Set([
  */
 export function getConfiguredModelName() {
   const configuredModel = process.env.GEMINI_MODEL?.trim()
-  if (!configuredModel || RETIRED_MODEL_ALIASES.has(configuredModel)) {
+  if (!configuredModel || LEGACY_MODEL_ALIASES.has(configuredModel)) {
     return DEFAULT_MODEL
   }
   return configuredModel
@@ -52,9 +53,6 @@ async function generateText(ai, model, prompt, retries = 2) {
         model,
         contents: prompt,
         config: {
-          temperature: 0.7,
-          topP: 0.9,
-          topK: 40,
           maxOutputTokens: 4096,
         },
       })
