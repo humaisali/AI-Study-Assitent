@@ -2,7 +2,7 @@ import React from 'react'
 import { RiArrowRightDownLine, RiBrainLine, RiFileUploadLine, RiSparklingLine } from 'react-icons/ri'
 
 const STEPS = [
-  { number: '01', icon: RiFileUploadLine, title: 'Bring the source', body: 'Upload a PDF, slide deck, text file, or Markdown document—up to 15 MB.' },
+  { number: '01', icon: RiFileUploadLine, title: 'Bring the source', body: 'Upload a PDF, slide deck, text file, or Markdown document, up to 15 MB.' },
   { number: '02', icon: RiSparklingLine, title: 'Choose the depth', body: 'Pick essential, balanced, or in-depth learning before the AI starts working.' },
   { number: '03', icon: RiBrainLine, title: 'Learn actively', body: 'Read the guide, scan the summary, then test yourself with generated questions.' },
 ]

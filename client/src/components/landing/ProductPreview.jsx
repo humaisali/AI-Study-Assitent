@@ -12,7 +12,7 @@ export default function ProductPreview() {
           <div className="flex items-center justify-between border-b border-white/10 px-1 pb-3">
             <div className="flex items-center gap-2">
               <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500 text-white"><RiSparkling2Line aria-hidden="true" /></span>
-              <div><p className="text-[0.68rem] font-bold text-white">Biology — Chapter 06</p><p className="text-[0.55rem] text-slate-500">Intermediate depth</p></div>
+              <div><p className="text-[0.68rem] font-bold text-white">Biology / Chapter 06</p><p className="text-[0.55rem] text-slate-500">Intermediate depth</p></div>
             </div>
             <span className="rounded-full bg-cyan-400/10 px-2.5 py-1 text-[0.55rem] font-bold uppercase tracking-wider text-cyan-300">Ready</span>
           </div>

@@ -14,18 +14,27 @@ const PAGES = {
 }
 
 const PAGE_TITLES = {
-  '/': 'StudyAI — Your AI-powered learning engine',
-  '/features': 'Features — StudyAI',
-  '/workspace': 'Study Workspace — StudyAI',
+  '/': 'StudyAI | Your AI-powered learning engine',
+  '/features': 'Features | StudyAI',
+  '/workspace': 'Study Workspace | StudyAI',
 }
 
 export default function App() {
   const currentPath = useHashRoute()
   const Page = PAGES[currentPath] || LandingPage
+  const isWorkspace = currentPath === '/workspace'
 
   useEffect(() => {
     document.title = PAGE_TITLES[currentPath] || PAGE_TITLES['/']
   }, [currentPath])
+
+  if (isWorkspace) {
+    return (
+      <Suspense fallback={<div className="flex min-h-screen items-center justify-center bg-slate-950" role="status"><span className="h-10 w-10 animate-spin rounded-full border-4 border-white/15 border-t-brand-400" /><span className="sr-only">Loading workspace</span></div>}>
+        <Page />
+      </Suspense>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-slate-50">

@@ -29,7 +29,7 @@ export default function AppFooter() {
           </div>
         </div>
         <div className="flex flex-col gap-3 pt-7 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-          <p>StudyAI — built for focused, independent learning.</p>
+          <p>StudyAI, built for focused, independent learning.</p>
           <p className="font-mono">PDF · TXT · MD · PPTX</p>
         </div>
       </div>

@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import ReactMarkdown from 'react-markdown'
+import React, { lazy, Suspense, useState } from 'react'
 import {
   RiBookOpenLine,
   RiCheckLine,
@@ -7,6 +6,8 @@ import {
   RiListCheck2,
   RiSparklingLine,
 } from 'react-icons/ri'
+
+const MarkdownStudyContent = lazy(() => import('./MarkdownStudyContent.jsx'))
 
 export default function ExplanationPanel({ explanation, summary }) {
   const [copied, setCopied] = useState(false)
@@ -72,33 +73,9 @@ export default function ExplanationPanel({ explanation, summary }) {
         </div>
 
         <div className="prose-study max-h-[42rem] overflow-y-auto pr-2 scrollbar-thin">
-          <ReactMarkdown
-            components={{
-              h1: ({ children }) => <h1 className="mb-4 mt-9 font-display text-3xl font-semibold leading-tight text-ink-900 first:mt-0">{children}</h1>,
-              h2: ({ children }) => <h2 className="mb-3 mt-8 font-display text-2xl font-semibold leading-tight text-ink-900">{children}</h2>,
-              h3: ({ children }) => <h3 className="mb-2 mt-6 font-display text-xl font-semibold text-ink-800">{children}</h3>,
-              p: ({ children }) => <p className="mb-4 text-[0.94rem] leading-7 text-ink-700">{children}</p>,
-              ul: ({ children }) => <ul className="mb-5 ml-5 list-disc space-y-2 marker:text-amber-500">{children}</ul>,
-              ol: ({ children }) => <ol className="mb-5 ml-5 list-decimal space-y-2 marker:font-semibold marker:text-amber-700">{children}</ol>,
-              li: ({ children }) => (
-                <li className="pl-1 text-[0.94rem] leading-7 text-ink-700">
-                  {children}
-                </li>
-              ),
-              strong: ({ children }) => <strong className="font-semibold text-ink-900">{children}</strong>,
-              em: ({ children }) => <em className="font-medium italic text-ink-600">{children}</em>,
-              code: ({ inline, children }) => inline ? (
-                <code className="rounded bg-ink-100 px-1.5 py-0.5 font-mono text-[0.82rem] text-amber-800">{children}</code>
-              ) : (
-                <pre className="my-5 overflow-x-auto rounded-2xl bg-ink-900 p-5 text-cream shadow-inner scrollbar-thin">
-                  <code className="font-mono text-sm leading-6">{children}</code>
-                </pre>
-              ),
-              blockquote: ({ children }) => <blockquote className="my-5 rounded-r-2xl border-l-4 border-amber-400 bg-amber-50/60 py-3 pl-4 pr-3 italic text-ink-600">{children}</blockquote>,
-            }}
-          >
-            {content}
-          </ReactMarkdown>
+          <Suspense fallback={<div className="space-y-3" role="status" aria-label="Formatting study guide"><div className="skeleton h-8 w-2/3 rounded-lg" /><div className="skeleton h-4 w-full rounded" /><div className="skeleton h-4 w-5/6 rounded" /></div>}>
+            <MarkdownStudyContent content={content} />
+          </Suspense>
         </div>
       </div>
     </article>

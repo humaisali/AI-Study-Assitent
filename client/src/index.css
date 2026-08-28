@@ -52,6 +52,11 @@
   .bento-card { @apply rounded-[1.75rem] border border-slate-200 p-6 shadow-sm transition-transform duration-300 hover:-translate-y-1 sm:p-8; }
   .bento-icon { @apply flex h-12 w-12 items-center justify-center rounded-2xl text-xl; }
   .workspace-chip { @apply inline-flex min-h-10 items-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-2 text-xs font-bold text-slate-600 shadow-sm; }
+  .workspace-panel { @apply rounded-2xl border border-slate-200/90 bg-white shadow-[0_1px_2px_rgba(15,23,42,.03),0_10px_36px_rgba(15,23,42,.045)]; }
+  .workspace-kicker { @apply text-[0.62rem] font-bold uppercase tracking-[0.18em] text-brand-600; }
+  .workspace-topbar-action { @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-3 text-xs font-bold text-slate-600 shadow-sm transition-all duration-200 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-950; }
+  .workspace-view-switch { @apply inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg px-3 text-xs font-bold text-slate-500 transition-all duration-200 hover:text-slate-900; }
+  .workspace-view-switch.active { @apply bg-white text-slate-950 shadow-sm ring-1 ring-slate-200; }
 
   .tab-btn { @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold transition-all duration-200; }
   .tab-btn.active { @apply bg-slate-950 text-white shadow-md; }
@@ -65,8 +70,27 @@
   .quiz-option.selected { @apply border-brand-400 bg-brand-50; }
   .quiz-option.correct { @apply border-sage-300 bg-sage-50; }
   .quiz-option.incorrect { @apply border-red-200 bg-red-50; }
-  .prose-study { @apply text-slate-700; }
+  .prose-study { @apply min-w-0 text-slate-700; overflow-wrap: anywhere; }
   .prose-study a { @apply font-bold text-brand-700 underline decoration-brand-300 underline-offset-4; }
+  .study-heading { @apply scroll-mt-24 text-balance font-display font-bold tracking-[-0.025em] text-slate-950; }
+  .study-heading-primary { @apply mb-4 mt-9 border-b border-slate-200 pb-3 text-2xl leading-tight first:mt-0 sm:text-3xl; }
+  .study-heading-secondary { @apply mb-3 mt-7 text-xl leading-snug sm:text-2xl; }
+  .study-heading-tertiary { @apply mb-2 mt-6 text-lg leading-snug; }
+  .study-paragraph { @apply mb-5 max-w-[75ch] text-[0.96rem] leading-7 text-slate-700; }
+  .study-list { @apply mb-6 ml-5 max-w-[75ch] space-y-2.5 text-[0.94rem] leading-7 text-slate-700; }
+  .study-blockquote { @apply my-6 rounded-r-2xl border-l-4 border-brand-400 bg-brand-50/70 py-4 pl-5 pr-4 text-sm leading-7 text-slate-700; }
+  .study-inline-code { @apply rounded-md border border-slate-200 bg-slate-100 px-1.5 py-0.5 font-mono text-[0.82rem] font-semibold text-brand-800; }
+  .study-code-block { @apply my-6 max-w-full overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950 p-5 font-mono text-sm leading-6 text-slate-100 shadow-inner; }
+  .study-code-block code { @apply border-0 bg-transparent p-0 font-mono text-inherit; }
+  .study-table-frame { @apply my-7 max-w-full; }
+  .study-table-scroll { @apply max-w-full overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm; }
+  .study-table-hint { @apply mt-2 text-center text-[0.66rem] font-semibold text-slate-500; }
+  .study-table { @apply w-full min-w-[42rem] border-collapse text-left text-sm; }
+  .study-table thead { @apply bg-slate-950 text-white; }
+  .study-table th { @apply border-r border-white/10 px-4 py-3.5 text-[0.7rem] font-bold uppercase tracking-[0.08em] last:border-r-0; }
+  .study-table td { @apply border-r border-t border-slate-200 px-4 py-3.5 align-top leading-6 text-slate-700 last:border-r-0; }
+  .study-table tbody tr:nth-child(even) { @apply bg-slate-50/80; }
+  .study-table tbody tr:hover { @apply bg-brand-50/50; }
 }
 
 @layer utilities {
@@ -96,6 +120,26 @@
   background-image: linear-gradient(#cbd5e1 1px, transparent 1px), linear-gradient(90deg, #cbd5e1 1px, transparent 1px);
   background-size: 36px 36px;
   mask-image: linear-gradient(to bottom, black, transparent 70%);
+}
+
+.workspace-app {
+  background-image:
+    radial-gradient(circle at 88% 8%, rgba(83, 109, 254, .08), transparent 24rem),
+    linear-gradient(rgba(148, 163, 184, .08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, .08) 1px, transparent 1px);
+  background-size: auto, 28px 28px, 28px 28px;
+}
+
+.prose-study .katex { color: #1e293b; font-size: 1.03em; }
+.prose-study .katex-display {
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  background: #f8fafc;
+  padding: 1.25rem;
+  text-align: center;
 }
 
 .skeleton {

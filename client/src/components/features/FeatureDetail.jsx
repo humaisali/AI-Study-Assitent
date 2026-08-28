@@ -3,9 +3,9 @@ import { RiCheckboxCircleLine } from 'react-icons/ri'
 import FeatureVisual from './FeatureVisual.jsx'
 
 const COPY = {
-  explanation: { eyebrow: '01 — Understand', title: 'Get a guided explanation instead of a generic answer.', text: 'StudyAI begins with your exact source and rebuilds it as a coherent learning path.', bullets: ['Headings and sections create a clear hierarchy', 'Important terms stay connected to their context', 'Readable formatting supports long study sessions'] },
-  summary: { eyebrow: '02 — Compress', title: 'Reduce the material without losing what matters.', text: 'The summary view gives you a fast route back into the topic when time is limited.', bullets: ['Key concepts are separated from supporting detail', 'A compact format makes rapid review easier', 'Switch back to the full guide whenever needed'] },
-  quiz: { eyebrow: '03 — Retrieve', title: 'Turn reading into a memory-building practice loop.', text: 'Generated questions move the session from recognition to active recall.', bullets: ['Immediate answer feedback', 'Visible progress through the question set', 'A final score encourages another retrieval pass'] },
+  explanation: { eyebrow: '01 / Understand', title: 'Get a guided explanation instead of a generic answer.', text: 'StudyAI begins with your exact source and rebuilds it as a coherent learning path.', bullets: ['Headings and sections create a clear hierarchy', 'Important terms stay connected to their context', 'Readable formatting supports long study sessions'] },
+  summary: { eyebrow: '02 / Compress', title: 'Reduce the material without losing what matters.', text: 'The summary view gives you a fast route back into the topic when time is limited.', bullets: ['Key concepts are separated from supporting detail', 'A compact format makes rapid review easier', 'Switch back to the full guide whenever needed'] },
+  quiz: { eyebrow: '03 / Retrieve', title: 'Turn reading into a memory-building practice loop.', text: 'Generated questions move the session from recognition to active recall.', bullets: ['Immediate answer feedback', 'Visible progress through the question set', 'A final score encourages another retrieval pass'] },
 }
 
 export default function FeatureDetail({ type, reverse = false }) {
