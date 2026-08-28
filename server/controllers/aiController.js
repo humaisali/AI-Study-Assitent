@@ -35,14 +35,14 @@ async function extractText(file) {
     return buffer.toString('utf-8')
   }
 
-  // PPTX — extract raw XML text (basic extraction)
+  // PPTX: extract raw XML text (basic extraction)
   if (
     file.mimetype === 'application/vnd.openxmlformats-officedocument.presentationml.presentation' ||
     ext === '.pptx'
   ) {
     // Basic text extraction from PPTX (XML-based)
     const content = buffer.toString('binary')
-    // Extract text between XML tags — good enough for slide text
+    // Extract text between XML tags, which is sufficient for slide text
     const textMatches = content.match(/<a:t>([^<]+)<\/a:t>/g) || []
     const text = textMatches
       .map(m => m.replace(/<\/?a:t>/g, ''))
@@ -60,7 +60,7 @@ async function extractText(file) {
 
 /**
  * POST /api/study
- * Main controller — extract text then call AI
+ * Main controller: extract text then call AI
  */
 export async function studyController(req, res) {
   const file = req.file
@@ -110,7 +110,7 @@ export async function studyController(req, res) {
       })
     }
 
-    // Gemini: actual rate limit (429 / RESOURCE_EXHAUSTED) — "try again later"
+    // Gemini: actual rate limit (429 / RESOURCE_EXHAUSTED), so ask the user to try again later
     const isRateLimit =
       msg.includes('429') ||
       msg.includes('RESOURCE_EXHAUSTED') ||

@@ -32,7 +32,7 @@ function getApiKey() {
   const apiKey = process.env.GEMINI_API_KEY?.trim()
   if (!apiKey) {
     throw new Error(
-      'Gemini API key is not configured. Add GEMINI_API_KEY to server/.env — get one at https://aistudio.google.com/app/apikey',
+      'Gemini API key is not configured. Add GEMINI_API_KEY to server/.env. Get one at https://aistudio.google.com/app/apikey',
     )
   }
   return apiKey
@@ -41,6 +41,10 @@ function getApiKey() {
 function isTransientError(error) {
   const message = error?.message || String(error)
   return /429|RESOURCE_EXHAUSTED|5\d\d|UNAVAILABLE|fetch failed|ECONNRESET|ETIMEDOUT|socket hang up/i.test(message)
+}
+
+function removeEmDashes(value) {
+  return value.replace(/\s*\u2014\s*/g, ' - ')
 }
 
 /**
@@ -53,7 +57,7 @@ async function generateText(ai, model, prompt, retries = 2) {
         model,
         contents: prompt,
         config: {
-          maxOutputTokens: 4096,
+          maxOutputTokens: 8192,
         },
       })
 
@@ -61,7 +65,7 @@ async function generateText(ai, model, prompt, retries = 2) {
       if (!text) {
         throw new Error('Gemini returned an empty response.')
       }
-      return text
+      return removeEmDashes(text)
     } catch (error) {
       if (attempt === retries || !isTransientError(error)) throw error
       await new Promise(resolve => setTimeout(resolve, 750 * 2 ** attempt))

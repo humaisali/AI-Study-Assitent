@@ -50,7 +50,7 @@ const upload = multer({
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
 
-// POST /api/study — upload file and get AI analysis
+// POST /api/study: upload file and get AI analysis
 router.post(
   '/study',
   (req, res, next) => {
@@ -70,7 +70,7 @@ router.post(
   studyController
 )
 
-// GET /api/health — simple health check
+// GET /api/health: simple health check
 router.get('/health', (req, res) => {
   res.json({
     status: 'ok',

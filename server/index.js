@@ -77,7 +77,7 @@ app.listen(PORT, () => {
   console.log(`   API: http://localhost:${PORT}/api/health\n`)
 
   if (!process.env.GEMINI_API_KEY) {
-    console.warn('⚠️  Warning: GEMINI_API_KEY is not set in .env — AI features will not work.\n')
+    console.warn('⚠️  Warning: GEMINI_API_KEY is not set in .env. AI features will not work.\n')
   } else {
     const model = getConfiguredModelName()
     console.log(`   Model: ${model}\n`)

@@ -3,6 +3,24 @@
  * All AI prompt templates for the study assistant
  */
 
+const MARKDOWN_OUTPUT_RULES = `
+MARKDOWN OUTPUT CONTRACT:
+- Return Markdown only. Never wrap the whole response in a code fence.
+- Start major topics with ## and subtopics with ###. Do not use a single # heading.
+- Put a blank line before and after every heading, list, table, quotation, and equation.
+- Keep paragraphs short: usually 2–4 sentences.
+- Use GitHub-Flavored Markdown tables only for genuine comparisons.
+- Every table row MUST be on its own line. Never escape the | characters.
+- A valid table must look exactly like this:
+  | Concept | Meaning |
+  | --- | --- |
+  | Example | Explanation |
+- Keep tables to four columns or fewer so they remain readable on small screens.
+- Write inline mathematics as $...$ and display mathematics as $$...$$ using KaTeX-compatible LaTeX.
+- Never put mathematical notation inside backticks and never escape the dollar delimiters.
+- Never use the em dash character. Use commas, colons, parentheses, or a regular hyphen instead.
+- Use fenced code blocks only for actual source code or pseudocode.`
+
 /**
  * Generates the explanation prompt based on difficulty level
  * @param {string} text - Extracted document text
@@ -29,7 +47,10 @@ INSTRUCTIONS:
 - Highlight key terms using **bold**
 - Use examples and analogies to clarify abstract concepts
 - Keep the explanation focused, accurate, and engaging
-- Do NOT add a preamble like "Sure!" or "Of course!" — go straight into the explanation
+- Do NOT add a preamble like "Sure!" or "Of course!". Go straight into the explanation
+- Aim for 900–1400 words. Prefer clarity and scanability over unnecessary length.
+
+${MARKDOWN_OUTPUT_RULES}
 
 STUDY MATERIAL:
 ---
@@ -52,7 +73,7 @@ export function getQuizPrompt(text, difficulty = 'intermediate') {
 
 Based on the study material below, generate exactly ${count} quiz questions.
 
-STRICT FORMAT — follow this exactly for each question:
+STRICT FORMAT: follow this exactly for each question:
 
 Q1: [Question text here]
 A) [Option A]
@@ -78,6 +99,7 @@ RULES:
 - The Answer line must contain ONLY the letter (A, B, C, or D)
 - Do NOT add explanations after the answer
 - Do NOT add any intro text before Q1
+- Never use the em dash character. Use commas, colons, parentheses, or a regular hyphen instead.
 
 STUDY MATERIAL:
 ---
@@ -101,7 +123,9 @@ INSTRUCTIONS:
 - Write 3–5 bullet points per section capturing the key ideas
 - End with a "## Key Takeaways" section listing the 3–5 most important points
 - Keep the total summary under 400 words
-- Be accurate — do not add information not present in the material
+- Be accurate. Do not add information not present in the material
+
+${MARKDOWN_OUTPUT_RULES}
 
 STUDY MATERIAL:
 ---
