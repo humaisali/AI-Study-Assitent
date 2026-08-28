@@ -12,6 +12,7 @@ import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import aiRoutes from './routes/aiRoutes.js'
+import { getConfiguredModelName } from './services/geminiService.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -78,7 +79,7 @@ app.listen(PORT, () => {
   if (!process.env.GEMINI_API_KEY) {
     console.warn('⚠️  Warning: GEMINI_API_KEY is not set in .env — AI features will not work.\n')
   } else {
-    const model = process.env.GEMINI_MODEL || 'gemini-1.5-flash-latest'
+    const model = getConfiguredModelName()
     console.log(`   Model: ${model}\n`)
   }
 })

@@ -1,58 +1,73 @@
 /**
  * services/geminiService.js
- * Wrapper around Google Gemini API
+ * Wrapper around the Google Gen AI SDK.
  */
 
-import { GoogleGenerativeAI } from '@google/generative-ai'
+import { GoogleGenAI } from '@google/genai'
 import { getExplanationPrompt, getQuizPrompt, getSummaryPrompt } from '../utils/prompts.js'
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
-
-// Supported: gemini-1.5-flash-latest | gemini-1.5-pro-latest | gemini-2.0-flash
-const MODEL_NAME = process.env.GEMINI_MODEL || 'gemini-2.5-flash'
+const DEFAULT_MODEL = 'gemini-2.5-flash'
+const RETIRED_MODEL_ALIASES = new Set([
+  'gemini-1.0-pro',
+  'gemini-1.5-flash',
+  'gemini-1.5-flash-latest',
+  'gemini-1.5-pro',
+  'gemini-1.5-pro-latest',
+])
 
 /**
- * Get a Gemini model instance with safety settings
+ * Resolve environment values at request time. Static ESM imports are evaluated
+ * before loadEnv.js runs, so reading process.env at module scope is unreliable.
  */
-function getModel() {
-  return genAI.getGenerativeModel({
-    model: MODEL_NAME,
-    generationConfig: {
-      temperature: 0.7,
-      topP: 0.9,
-      topK: 40,
-      maxOutputTokens: 4096,
-    },
-  })
+export function getConfiguredModelName() {
+  const configuredModel = process.env.GEMINI_MODEL?.trim()
+  if (!configuredModel || RETIRED_MODEL_ALIASES.has(configuredModel)) {
+    return DEFAULT_MODEL
+  }
+  return configuredModel
+}
+
+function getApiKey() {
+  const apiKey = process.env.GEMINI_API_KEY?.trim()
+  if (!apiKey) {
+    throw new Error(
+      'Gemini API key is not configured. Add GEMINI_API_KEY to server/.env — get one at https://aistudio.google.com/app/apikey',
+    )
+  }
+  return apiKey
+}
+
+function isTransientError(error) {
+  const message = error?.message || String(error)
+  return /429|RESOURCE_EXHAUSTED|5\d\d|UNAVAILABLE|fetch failed|ECONNRESET|ETIMEDOUT|socket hang up/i.test(message)
 }
 
 /**
  * Generate text from a prompt with retry logic
- * @param {string} prompt
- * @param {number} retries
  */
-async function generateText(prompt, retries = 2) {
-  const model = getModel()
+async function generateText(ai, model, prompt, retries = 2) {
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
-      const result = await model.generateContent(prompt)
-      const response = result.response
-      return response.text()
-    } catch (err) {
-      if (attempt === retries) throw err
-      // Wait before retry (exponential backoff)
-      await new Promise(r => setTimeout(r, 1000 * Math.pow(2, attempt)))
-    }
-  }
-}
+      const response = await ai.models.generateContent({
+        model,
+        contents: prompt,
+        config: {
+          temperature: 0.7,
+          topP: 0.9,
+          topK: 40,
+          maxOutputTokens: 4096,
+        },
+      })
 
-/**
- * Ensure Gemini API key is configured
- */
-function ensureApiKey() {
-  const key = process.env.GEMINI_API_KEY
-  if (!key || typeof key !== 'string' || key.trim() === '') {
-    throw new Error('API key is not configured. Add GEMINI_API_KEY to server/.env — get one at https://makersuite.google.com/app/apikey')
+      const text = response.text?.trim()
+      if (!text) {
+        throw new Error('Gemini returned an empty response.')
+      }
+      return text
+    } catch (error) {
+      if (attempt === retries || !isTransientError(error)) throw error
+      await new Promise(resolve => setTimeout(resolve, 750 * 2 ** attempt))
+    }
   }
 }
 
@@ -63,16 +78,17 @@ function ensureApiKey() {
  * @returns {{ explanation: string, quiz: string, summary: string }}
  */
 export async function analyzeText(text, difficulty = 'intermediate') {
-  ensureApiKey()
-
   if (!text || text.trim().length < 50) {
     throw new Error('Document content is too short to analyze. Please upload a file with more content.')
   }
 
+  const ai = new GoogleGenAI({ apiKey: getApiKey() })
+  const model = getConfiguredModelName()
+
   const [explanation, quiz, summary] = await Promise.all([
-    generateText(getExplanationPrompt(text, difficulty)),
-    generateText(getQuizPrompt(text, difficulty)),
-    generateText(getSummaryPrompt(text)),
+    generateText(ai, model, getExplanationPrompt(text, difficulty)),
+    generateText(ai, model, getQuizPrompt(text, difficulty)),
+    generateText(ai, model, getSummaryPrompt(text)),
   ])
 
   return { explanation, quiz, summary }

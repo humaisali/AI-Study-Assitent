@@ -105,8 +105,8 @@ export async function studyController(req, res) {
       msg.includes('invalid') ||
       msg.includes('Invalid API key')
     ) {
-      return res.status(500).json({
-        error: 'Invalid or missing Gemini API key. Check GEMINI_API_KEY in server/.env and get a key at https://makersuite.google.com/app/apikey',
+      return res.status(503).json({
+        error: 'Invalid or missing Gemini API key. Check GEMINI_API_KEY in server/.env and get a key at https://aistudio.google.com/app/apikey',
       })
     }
 
@@ -119,17 +119,24 @@ export async function studyController(req, res) {
       return res.status(429).json({ error: 'AI quota exceeded. Please try again later.' })
     }
 
-    // Gemini: model not available / quota not enabled (e.g. gemini-2.0 not enabled for key)
-    if (/quota|not available|not enabled|disabled|unsupported model/i.test(msg)) {
-      return res.status(500).json({
-        error: 'This model may not be available for your API key. Try setting GEMINI_MODEL=gemini-1.5-flash-latest in server/.env',
+    // Gemini: model is unavailable or retired.
+    if (/not found|not available|not enabled|disabled|unsupported model/i.test(msg)) {
+      return res.status(503).json({
+        error: 'The configured Gemini model is unavailable. Set GEMINI_MODEL=gemini-2.5-flash in server/.env.',
       })
     }
 
     // Gemini: permission / API not enabled
     if (msg.includes('403') || msg.includes('PERMISSION_DENIED')) {
-      return res.status(500).json({
+      return res.status(503).json({
         error: 'Gemini API access denied. Ensure the API is enabled and your key has access.',
+      })
+    }
+
+    // Gemini: upstream connection failure
+    if (/fetch failed|ECONNRESET|ETIMEDOUT|UNAVAILABLE|socket hang up/i.test(msg)) {
+      return res.status(503).json({
+        error: 'Could not reach the Gemini API. Check the server network connection and try again.',
       })
     }
 
